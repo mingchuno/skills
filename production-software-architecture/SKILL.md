@@ -1,8 +1,8 @@
 ---
 name: production-software-architecture
-description: Design, review, evolve, and refactor production software for long-term maintainability. Use for architecture decisions, feature design, module boundaries, legacy-code changes, API evolution, data migrations, failure handling, testing strategy, observability, dependency governance, architectural reviews, and turning design rules into CI-enforced fitness functions. Prefer simple, locally consistent designs over pattern-heavy or theoretically pure architectures.
+description: Design, review, evolve, and refactor production software for long-term maintainability. Use for architecture decisions, feature design, module boundaries, legacy-code changes, AI-generated or spaghetti-code cleanup, long functions or components, duplicated implementations, unclear responsibilities, API evolution, data migrations, failure handling, testing strategy, observability, dependency governance, architectural reviews, and turning design rules into CI-enforced fitness functions. Prefer simple, locally consistent designs over pattern-heavy or theoretically pure architectures.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
   scope: language-agnostic
 ---
 
@@ -108,7 +108,7 @@ During implementation:
 
 If existing design makes the change unsafe, perform the minimum preparatory refactor first.
 
-Read `references/safe-change-and-refactoring.md` for legacy or high-risk changes.
+For legacy, high-risk, AI-generated, duplicated, overly long, or poorly separated code, read `references/safe-change-and-refactoring.md` before editing. Use its structural-triage workflow to distinguish local code smells from boundary problems and select the smallest safe improvement.
 
 ### 6. Verify behavior and architecture
 

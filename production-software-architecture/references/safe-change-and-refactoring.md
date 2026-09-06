@@ -23,6 +23,69 @@ Before changing poorly understood behavior:
 
 Characterization tests document what the system does, not necessarily what it ought to do.
 
+## Triage structural entropy
+
+Treat "spaghetti code" as a starting description, not a diagnosis. Before editing, build a short, evidence-based inventory of the places where structure increases change cost or defect risk. For each candidate, record:
+
+- the observable symptom and concrete files or execution flow;
+- the behavior and compatibility contracts at risk;
+- the responsibilities, state, and side effects currently mixed together;
+- evidence that the area changes often, causes defects, duplicates knowledge, or blocks requested work;
+- the smallest refactoring move that could improve it;
+- how the move will be verified.
+
+Prioritize code on active or critical paths, duplicated business decisions, unsafe side effects, high change amplification, and areas blocking current work. File length, function length, complexity scores, and duplication detectors are useful search signals, but they do not prove that a refactor is valuable.
+
+### Long functions, classes, or UI components
+
+Do not split code merely to make it shorter. First identify its phases, decisions, invariants, state ownership, and side effects.
+
+Then improve cohesion one step at a time:
+
+1. Characterize the behavior through the most stable observable boundary available.
+2. Name and extract a cohesive phase, rule, or pure calculation.
+3. Isolate external effects from decisions where that creates a useful test seam.
+4. Move behavior toward the state or domain concept it governs.
+5. Leave orchestration readable at one level of abstraction.
+
+The result should reduce what a maintainer must understand at once. A large function replaced by many one-line forwarding functions is not an improvement.
+
+### Duplicated code and implementations
+
+Classify duplication before removing it:
+
+- **Duplicated knowledge:** copies encode the same business rule or policy and should change together. Give that knowledge one canonical owner and migrate callers incrementally.
+- **Duplicated mechanism:** copies perform the same technical operation. Consolidate when a stable capability and ownership boundary are clear.
+- **Coincidental similarity:** code looks alike today but represents different concepts or change pressures. Keep it separate until shared semantics are demonstrated.
+
+Use defect history, co-change history, domain language, and caller expectations as evidence. Preserve differences in validation, errors, ordering, transactions, performance, and side effects; superficial deduplication can silently erase real contracts.
+
+### Unclear boundaries and mixed responsibilities
+
+Trace representative behavior end to end, then identify who should own each invariant, state transition, and side effect. Cluster code that changes for the same reason and separate code with independent change pressures.
+
+Prefer a boundary when it:
+
+- gives one concept or capability a clear owner;
+- hides implementation detail behind a smaller stable interface;
+- stops unrelated modules from reaching through each other;
+- isolates an external effect or volatile dependency;
+- reduces the number of places a likely change must touch.
+
+Test a proposed boundary against real changes: describe how a recent bug or plausible requirement would flow through it. If the change still requires navigating many wrappers or editing unrelated modules, the boundary has not improved locality.
+
+### Make one vertical improvement at a time
+
+Choose one coherent behavior slice rather than reorganizing the repository horizontally by file type. For each slice:
+
+1. Establish passing verification or characterize current behavior.
+2. Make one structural move.
+3. Re-run the narrowest relevant feedback immediately.
+4. Run broader verification before committing or handing off.
+5. Remove transitional code once all callers have migrated.
+
+After repeated problems reveal a stable rule, add a focused guardrail such as cycle detection, forbidden imports, ownership checks, complexity signals, or duplicate-code reporting. Use thresholds to direct review, not as automatic proof that code is poorly designed.
+
 ## Find seams
 
 A seam is a place where behavior can be changed or observed without rewriting the whole system. Useful seams include:

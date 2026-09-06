@@ -82,6 +82,10 @@ Use these as compact prompts during design or review. Apply only sections releva
 - Is there a safety net for poorly understood behavior?
 - Can structural and functional changes be reviewed separately?
 - Does the refactor reduce change amplification, coupling, or conceptual load?
+- Were long functions, classes, or components split along cohesive responsibilities rather than arbitrary size limits?
+- Was duplicated knowledge given one canonical owner while coincidental similarity remained separate?
+- Does each new boundary clarify ownership or hide meaningful complexity rather than add a forwarding layer?
+- Can a representative future change be made in fewer unrelated places or with less system knowledge?
 - Are public contracts preserved?
 - Is the diff proportionate to the objective?
 - Is a transition wrapper/abstraction scheduled for removal if temporary?
