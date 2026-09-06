@@ -1,96 +1,88 @@
-# Production Software Architecture Skill
+# Software Engineering Skills
 
-A language-agnostic agent skill for designing, reviewing, evolving, and refactoring production software for long-term maintainability.
+Language-agnostic skills for improving existing code and maintaining production software. Both skills are manually invoked in Codex.
 
-The skill emphasizes:
-
-- understanding existing behavior before changing structure;
-- simple, cohesive boundaries and low conceptual overhead;
-- safe incremental refactoring instead of broad rewrites;
-- production concerns such as failures, compatibility, migrations, and observability;
-- executable architecture and dependency guardrails;
-- evidence-based cleanup of AI-generated or spaghetti code.
-
-It is deliberately architecture-style neutral. Clean Architecture, DDD, CQRS, microservices, repositories, and other patterns are used only when they solve a demonstrated problem.
+| Skill | Purpose |
+| --- | --- |
+| [Refactoring](refactoring/SKILL.md) | Refactor a selected module, file, class, functions, or whole codebase through small changes that preserve observable behavior. |
+| [Production Software Architecture](production-software-architecture/SKILL.md) | Design, review, and evolve system boundaries, compatibility, operability, and architecture guardrails. |
 
 ## Install
 
-Install the skill globally with the [Skills CLI](https://skills.sh/):
+Install either skill globally with the [Skills CLI](https://skills.sh/):
 
 ```bash
+npx skills add mingchuno/skills -g --skill refactoring -y
 npx skills add mingchuno/skills -g --skill production-software-architecture -y
 ```
 
-To install it only for the current project, omit `-g`:
-
-```bash
-npx skills add mingchuno/skills --skill production-software-architecture -y
-```
-
-Verify the global installation:
+To install only for the current project, omit `-g`. Verify the global installation with:
 
 ```bash
 npx skills ls -g
 ```
 
-Update it later with:
+## Manual invocation
 
-```bash
-npx skills update production-software-architecture -g
-```
-
-## When to use it
-
-The skill should activate for architecture decisions and reviews, legacy-code changes, module-boundary design, API or data evolution, production hardening, and structural problems such as:
-
-- long, multi-responsibility functions or UI components;
-- duplicated business rules or competing implementations;
-- unclear ownership and mixed responsibilities;
-- circular or uncontrolled dependencies;
-- excessive forwarding layers and speculative abstractions;
-- risky refactors in poorly tested systems.
-
-Example prompts:
+Explicitly select the skill and describe the target and desired improvement:
 
 ```text
-Review this subsystem and propose the smallest safe architecture improvement.
+$refactoring Refactor src/orders/checkout.ts without changing its observable behavior.
 
-Refactor this long component without changing its observable behavior.
+$refactoring Simplify the Invoice class and its calculateTotal and applyDiscount functions.
 
-Find duplicated business rules and determine which copies should share one owner.
+$refactoring Refactor the billing module to clarify ownership and remove duplicated rules.
 
-Untangle this AI-generated codebase incrementally and add guardrails to prevent regression.
+$refactoring Refactor this whole codebase incrementally, prioritizing the most consequential structural problems and tracking coverage.
+
+$production-software-architecture Review this subsystem and improve its module boundaries.
+
+$production-software-architecture Plan a backward-compatible API migration with verification and rollback.
 ```
 
-## How it approaches refactoring
+Both skill folders contain `agents/openai.yaml` with:
 
-For existing code, the skill follows an incremental loop:
+```yaml
+policy:
+  allow_implicit_invocation: false
+```
 
-1. Trace representative behavior and identify contracts.
-2. Build an evidence-based inventory of structural problems.
-3. Protect behavior with characterization or contract tests.
-4. Choose one high-value behavior slice.
-5. Make the smallest coherent structural improvement.
-6. Verify after each meaningful move.
-7. Encode stable architecture rules as automated checks where practical.
+This is Codex's invocation-policy setting, stored separately from `SKILL.md` frontmatter. It prevents implicit selection while preserving explicit `$skill-name` invocation. See the [official skill documentation](https://learn.chatgpt.com/docs/build-skills#optional-metadata). Other agents may use different invocation controls; this policy is specific to Codex.
 
-See [`production-software-architecture/SKILL.md`](production-software-architecture/SKILL.md) for the complete workflow.
+Keep the complete skill folder when installing or copying it so the policy and reference files accompany `SKILL.md`. Existing installed copies need updating to receive the policy.
 
-## Relationship to clean-code and refactoring skills
+## Refactoring workflow
 
-This skill complements narrower implementation skills:
+The refactoring entrypoint was converted from `refactoring/refactoring.mini.md`. It retains the core decision rules and links to the detailed [refactoring guide](refactoring/refactoring.md), whose relevant sections are read only when needed.
 
-- **Clean Code** guides naming, function structure, readability, and local implementation quality.
-- **Refactoring Best Practices** provides tactical behavior-preserving refactoring techniques.
-- **Production Software Architecture** determines what to improve, where responsibilities and boundaries belong, which risks matter, and which rules should become lasting guardrails.
+The workflow is:
 
-They can be used together: this skill supplies system-level direction while the narrower skills guide individual code changes.
+1. Inspect the selected scope, callers, contracts, and existing checks.
+2. Identify concrete structural friction and choose small, useful transformations.
+3. Establish a verification baseline and protect unclear behavior before risky edits.
+4. Refactor in coherent steps and verify after each meaningful change.
+5. Report improvements, verification results, remaining work, and uncertainty.
+
+For a whole-codebase request, inventory and prioritize the major areas, then work through them incrementally. Track completed, deferred, and uninspected areas. Preserve behavior and stop where further changes would be speculative.
+
+## Choosing between the skills
+
+Use **Refactoring** to carry out structural improvements within a requested scope. Use **Production Software Architecture** when the central question concerns responsibilities, system boundaries, production risks, or lasting architecture constraints. Explicitly invoke both when the task needs both perspectives.
+
+Production Software Architecture remains neutral about architecture styles. Clean Architecture, DDD, CQRS, microservices, repositories, and other patterns are appropriate when they solve a demonstrated problem. Its detailed references cover system understanding, modularity, safe changes, testing, failure and data evolution, operability, architecture decisions, governance, and reviews.
 
 ## Repository structure
 
 ```text
+refactoring/
+├── SKILL.md
+├── agents/
+│   └── openai.yaml
+└── refactoring.md
 production-software-architecture/
 ├── SKILL.md
+├── agents/
+│   └── openai.yaml
 └── references/
     ├── architecture-decisions.md
     ├── boundaries-and-modularity.md

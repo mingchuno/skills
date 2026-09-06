@@ -1,12 +1,14 @@
 ---
 name: production-software-architecture
-description: Design, review, evolve, and refactor production software for long-term maintainability. Use for architecture decisions, feature design, module boundaries, legacy-code changes, AI-generated or spaghetti-code cleanup, long functions or components, duplicated implementations, unclear responsibilities, API evolution, data migrations, failure handling, testing strategy, observability, dependency governance, architectural reviews, and turning design rules into CI-enforced fitness functions. Prefer simple, locally consistent designs over pattern-heavy or theoretically pure architectures.
+description: Design, review, evolve, and refactor production software for long-term maintainability, including boundaries, compatibility, operability, and architecture guardrails. Invoke explicitly for system-level architecture work.
 metadata:
   version: "1.1.0"
   scope: language-agnostic
 ---
 
 # Production Software Architecture
+
+Apply only when the user explicitly invokes this skill.
 
 Use this skill to make software easier to change safely over years of production use. Optimize for comprehensibility, explicit boundaries, controlled coupling, operational safety, and reversible evolution—not maximum abstraction or architectural fashion.
 
