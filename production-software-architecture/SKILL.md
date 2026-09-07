@@ -1,5 +1,6 @@
 ---
 name: production-software-architecture
+disable-model-invocation: true
 description: Design, review, evolve, and refactor production software for long-term maintainability, including boundaries, compatibility, operability, and architecture guardrails. Invoke explicitly for system-level architecture work.
 metadata:
   version: "1.1.0"

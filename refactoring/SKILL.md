@@ -1,5 +1,6 @@
 ---
 name: refactoring
+disable-model-invocation: true
 description: Refactor a selected module, file, class, functions, or whole codebase in small steps that preserve observable behavior. Invoke explicitly to improve structure and changeability.
 ---
 
