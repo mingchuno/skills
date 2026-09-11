@@ -1,19 +1,21 @@
 # Software Engineering Skills
 
-Language-agnostic skills for improving existing code and maintaining production software. Both skills are manually invoked in Codex.
+Language-agnostic skills for improving existing code, maintaining production software, and writing technical documentation. All skills are manually invoked in Codex.
 
 | Skill | Purpose |
 | --- | --- |
 | [Refactoring](refactoring/SKILL.md) | Refactor a selected module, file, class, functions, or whole codebase through small changes that preserve observable behavior. |
 | [Production Software Architecture](production-software-architecture/SKILL.md) | Design, review, and evolve system boundaries, compatibility, operability, and architecture guardrails. |
+| [Concise Technical Documentation](concise-docs/SKILL.md) | Write and edit concise technical documentation for experienced engineers. |
 
 ## Install
 
-Install either skill globally with the [Skills CLI](https://skills.sh/):
+Install a skill globally with the [Skills CLI](https://skills.sh/):
 
 ```bash
 npx skills add mingchuno/skills -g --skill refactoring -y
 npx skills add mingchuno/skills -g --skill production-software-architecture -y
+npx skills add mingchuno/skills -g --skill concise-docs -y
 ```
 
 To install only for the current project, omit `-g`. Verify the global installation with:
@@ -38,6 +40,8 @@ $refactoring Refactor this whole codebase incrementally, prioritizing the most c
 $production-software-architecture Review this subsystem and improve its module boundaries.
 
 $production-software-architecture Plan a backward-compatible API migration with verification and rollback.
+
+$concise-docs Edit this README for clarity while preserving its commands and repository details.
 ```
 
 Both skill folders contain `agents/openai.yaml` with:
@@ -49,7 +53,7 @@ policy:
 
 This is Codex's invocation-policy setting, stored separately from `SKILL.md` frontmatter. It prevents implicit selection while preserving explicit `$skill-name` invocation. See the [official skill documentation](https://learn.chatgpt.com/docs/build-skills#optional-metadata). Other agents may use different invocation controls; this policy is specific to Codex.
 
-Keep the complete skill folder when installing or copying it so the policy and reference files accompany `SKILL.md`. Existing installed copies need updating to receive the policy.
+Keep the complete skill folder when installing or copying it so any policy and reference files accompany `SKILL.md`. Existing installed copies need updating to receive changes.
 
 ## Refactoring workflow
 
@@ -93,4 +97,6 @@ production-software-architecture/
     ├── safe-change-and-refactoring.md
     ├── system-understanding.md
     └── testing-and-verification.md
+concise-docs/
+└── SKILL.md
 ```
