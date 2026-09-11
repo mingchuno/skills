@@ -1,7 +1,9 @@
 ---
 name: concise-docs
-description: Write and edit concise technical documentation. Use for README,
-architecture docs, ADRs, design docs, implementation notes, and developer guides.
+description: Write and edit concise technical documentation. Use for README, architecture docs, ADRs, design docs, implementation notes, and developer guides.
+metadata:
+  version: "1.1.0"
+  scope: language-agnostic
 ---
 
 # Concise technical documentation
