@@ -1,6 +1,6 @@
 # Software Engineering Skills
 
-Reusable agent instructions for assessing code quality, refactoring safely, designing production systems, and writing concise documentation. The skills are language-agnostic and can be installed independently.
+Reusable agent instructions for assessing code quality, refactoring safely, designing production systems, writing concise documentation, and scaffolding new JS/TS projects. The skills can be installed independently.
 
 ## Choose a skill
 
@@ -10,6 +10,7 @@ Reusable agent instructions for assessing code quality, refactoring safely, desi
 | [Refactoring](refactoring/SKILL.md) (`refactoring`) | You have selected code whose structure needs improving while preserving behavior. | Small, reviewable transformations with relevant checks. |
 | [Production Software Architecture](production-software-architecture/SKILL.md) (`production-software-architecture`) | You need to design or review boundaries, dependencies, compatibility, migrations, or production readiness. | Recommendations or implementation grounded in system constraints, failure modes, and trade-offs. |
 | [Concise Technical Documentation](concise-docs/SKILL.md) (`concise-docs`) | A README, ADR, design document, or developer guide needs clearer, shorter prose. | Focused documentation that preserves commands, constraints, and technical meaning. |
+| [JS/TS Project Scaffolding](js-ts-project-scaffolding/SKILL.md) (`js-ts-project-scaffolding`) | You are creating a new JavaScript or TypeScript Node.js or web project. | A minimal, requirements-led stack with preferred tooling and conditional libraries. |
 
 If you are unsure where to start, ask **Code Quality** for an assessment without edits. Choose **Refactoring** when the target is already clear, or **Production Software Architecture** when the problem spans system boundaries.
 
@@ -79,7 +80,7 @@ $production-software-architecture Review the billing API and plan a backward-com
 $concise-docs Edit README.md for first-time users. Make installation and usage easy to find while preserving working commands and important constraints.
 ```
 
-In Codex, Code Quality, Refactoring, and Production Software Architecture require explicit invocation. Concise Technical Documentation also allows automatic selection for matching tasks. These settings are specific to Codex; other agents may handle invocation differently. See [Codex skill invocation](https://learn.chatgpt.com/docs/build-skills#how-chatgpt-and-codex-use-skills).
+In Codex, Code Quality, Refactoring, and Production Software Architecture require explicit invocation. Concise Technical Documentation and JS/TS Project Scaffolding allow automatic selection for matching tasks. These settings are specific to Codex; other agents may handle invocation differently. See [Codex skill invocation](https://learn.chatgpt.com/docs/build-skills#how-chatgpt-and-codex-use-skills).
 
 ## Workflow details
 
