@@ -1,0 +1,29 @@
+# Agent-readable v1 template; no policy runner is bundled.
+version: 1
+authority: "Replace with repository rules and documented contracts before use."
+scope:
+  include: [] # Explicit repository-relative paths selected for the task.
+  exclude: [] # Generated/vendor paths, if applicable; hold stable across snapshots.
+architecture:
+  new_cycles_allowed: 0
+  new_forbidden_dependencies_allowed: 0
+  forbidden_dependencies: [] # Entries: {rule_id, from, to, rationale}; use repository module IDs.
+  boundary_rules: [] # Entries: {rule_id, description, evidence}; only established rules.
+ratchet:
+  new_code: soft_targets_with_justified_exceptions
+  modified_code: no_material_regression
+  untouched_legacy: no_cleanup_required
+  baseline_comparison: violation_identity_and_directed_edges
+  advance_baseline: after_acceptance_only
+soft_targets:
+  cognitive_complexity: {target_max: 10, warning_above: 15, severe_above: 25}
+  cyclomatic_complexity: {target_max: 10, warning_above: 15, severe_above: 25}
+  nloc: {target_max: 40, warning_above: 60, severe_above: 100}
+  max_nesting: {target_max: 3, warning_above: 4}
+  parameters: {target_max: 4, warning_above: 6}
+abstraction_review_triggers:
+  single_implementation_interface: true
+  delegation_chain_depth_at_least: 3
+  inheritance_depth_at_least: 4
+required_checks: [] # Entries: {id, command_or_method, scope}; populate before acceptance.
+allowed_behavior_changes: [] # Only changes authorized by the current task.

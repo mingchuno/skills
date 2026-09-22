@@ -1,0 +1,231 @@
+{
+  "version": 1,
+  "mode": "refactoring",
+  "scope": {
+    "requested": [
+      "checkout"
+    ],
+    "inspected": [
+      "checkout"
+    ],
+    "completed": [],
+    "deferred": [
+      "Acceptance pending required checks and indirect dependency review."
+    ],
+    "uninspected": [
+      "Indirect dependency paths"
+    ]
+  },
+  "policy": "Synthetic example: preserve behavior and introduce no new dependency violations.",
+  "before": {
+    "source_state": "synthetic baseline; not a repository revision",
+    "entities": [
+      {
+        "id": "checkout::processOrder",
+        "path": "src/checkout.ts",
+        "kind": "function",
+        "symbol": "processOrder",
+        "predecessors": [],
+        "signals": {
+          "max_nesting": {
+            "status": "estimated",
+            "value": 5,
+            "unit": "levels",
+            "method": "Manual structural count; outermost control construct has depth 1",
+            "evidence": [
+              "Synthetic source illustration: nested eligibility, stock, and price decisions."
+            ]
+          },
+          "cognitive_complexity": {
+            "status": "unavailable",
+            "value": null,
+            "unit": "score",
+            "method": "Not collected in this synthetic example",
+            "evidence": [],
+            "reason": "No cognitive-complexity analyzer was available."
+          },
+          "branch_coverage": {
+            "status": "unavailable",
+            "value": null,
+            "unit": "ratio",
+            "method": "Not collected in this synthetic example",
+            "evidence": [],
+            "reason": "Coverage was not collected."
+          }
+        },
+        "observations": [
+          "Synthetic example only; these values do not describe a real repository."
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "checkout-tests",
+        "kind": "tests",
+        "required": true,
+        "scope": [
+          "src/checkout.ts"
+        ],
+        "method": "Repository checkout test command",
+        "status": "not_run",
+        "evidence": [
+          "Synthetic scenario: required test runner unavailable."
+        ]
+      }
+    ],
+    "architecture": {
+      "status": "partial",
+      "scope": [
+        "checkout and its direct dependencies"
+      ],
+      "method": "Manual direct-import inspection",
+      "evidence": [
+        "Synthetic scenario: indirect dependency paths were not inspected."
+      ],
+      "violations": []
+    }
+  },
+  "after": {
+    "source_state": "synthetic candidate; not a repository revision",
+    "entities": [
+      {
+        "id": "checkout::processOrder",
+        "path": "src/checkout.ts",
+        "kind": "function",
+        "symbol": "processOrder",
+        "predecessors": [
+          "checkout::processOrder"
+        ],
+        "signals": {
+          "max_nesting": {
+            "status": "estimated",
+            "value": 3,
+            "unit": "levels",
+            "method": "Manual structural count; outermost control construct has depth 1",
+            "evidence": [
+              "Synthetic source illustration: nested eligibility, stock, and price decisions."
+            ]
+          },
+          "cognitive_complexity": {
+            "status": "unavailable",
+            "value": null,
+            "unit": "score",
+            "method": "Not collected in this synthetic example",
+            "evidence": [],
+            "reason": "No cognitive-complexity analyzer was available."
+          },
+          "branch_coverage": {
+            "status": "unavailable",
+            "value": null,
+            "unit": "ratio",
+            "method": "Not collected in this synthetic example",
+            "evidence": [],
+            "reason": "Coverage was not collected."
+          }
+        },
+        "observations": [
+          "Synthetic example only; these values do not describe a real repository."
+        ]
+      }
+    ],
+    "checks": [
+      {
+        "id": "checkout-tests",
+        "kind": "tests",
+        "required": true,
+        "scope": [
+          "src/checkout.ts"
+        ],
+        "method": "Repository checkout test command",
+        "status": "not_run",
+        "evidence": [
+          "Synthetic scenario: required test runner unavailable."
+        ]
+      }
+    ],
+    "architecture": {
+      "status": "partial",
+      "scope": [
+        "checkout and its direct dependencies"
+      ],
+      "method": "Manual direct-import inspection",
+      "evidence": [
+        "Synthetic scenario: indirect dependency paths were not inspected."
+      ],
+      "violations": []
+    }
+  },
+  "findings": [
+    {
+      "diagnosis": "CONTROL_FLOW_COMPLEXITY",
+      "location": "src/checkout.ts::processOrder",
+      "evidence": [
+        "Synthetic scenario: deeply nested eligibility and stock checks."
+      ],
+      "impact": "Readers must retain several nested conditions to follow pricing.",
+      "action": "Flatten guards while preserving evaluation and side-effect order.",
+      "priority": "high"
+    }
+  ],
+  "comparison": [
+    {
+      "signal": "max_nesting",
+      "role": "target",
+      "before_entities": [
+        "checkout::processOrder"
+      ],
+      "after_entities": [
+        "checkout::processOrder"
+      ],
+      "result": "improved",
+      "rationale": "Manual estimate 5 -> 3; no claim of an analyzer measurement."
+    },
+    {
+      "signal": "architecture",
+      "role": "guard",
+      "before_entities": [
+        "checkout::processOrder"
+      ],
+      "after_entities": [
+        "checkout::processOrder"
+      ],
+      "result": "unknown",
+      "rationale": "Direct imports alone do not establish the absence of new cycles."
+    }
+  ],
+  "decision": {
+    "outcome": "inconclusive",
+    "rationale": "A local improvement cannot establish acceptance without required checks and sufficient boundary evidence.",
+    "gaps": [
+      "Required tests not run.",
+      "Compatibility not verified.",
+      "Indirect dependencies uninspected."
+    ],
+    "criteria": {
+      "required_checks": {
+        "status": "unknown",
+        "rationale": "Required verification is incomplete in this synthetic scenario."
+      },
+      "behavior_compatibility": {
+        "status": "unknown",
+        "rationale": "Required verification is incomplete in this synthetic scenario."
+      },
+      "architecture_ratchet": {
+        "status": "unknown",
+        "rationale": "Required verification is incomplete in this synthetic scenario."
+      },
+      "targeted_improvement": {
+        "status": "pass",
+        "rationale": "Illustrated guard clauses reduce nesting from an estimated 5 to 3 using the same counting method."
+      },
+      "regression_guards": {
+        "status": "unknown",
+        "rationale": "Required verification is incomplete in this synthetic scenario."
+      },
+      "abstraction_justification": {
+        "status": "not_applicable",
+        "rationale": "The illustrated candidate adds no abstraction."
+      }
+    }
+  }
+}

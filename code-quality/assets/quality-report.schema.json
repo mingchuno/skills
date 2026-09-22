@@ -1,0 +1,203 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Code quality report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "mode", "scope", "policy", "before", "after", "findings", "comparison", "decision"],
+  "properties": {
+    "version": {"const": 1},
+    "mode": {"enum": ["assessment", "implementation", "modification", "refactoring", "architecture"]},
+    "scope": {
+      "type": "object", "additionalProperties": false,
+      "required": ["requested", "inspected", "completed", "deferred", "uninspected"],
+      "properties": {
+        "requested": {"$ref": "#/$defs/nonemptyStrings"},
+        "inspected": {"$ref": "#/$defs/strings"},
+        "completed": {"$ref": "#/$defs/strings"},
+        "deferred": {"$ref": "#/$defs/strings"},
+        "uninspected": {"$ref": "#/$defs/strings"}
+      }
+    },
+    "policy": {"$ref": "#/$defs/text"},
+    "before": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/snapshot"}]},
+    "after": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/snapshot"}]},
+    "findings": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["diagnosis", "location", "evidence", "impact", "action"],
+        "properties": {
+          "diagnosis": {"enum": ["CONTROL_FLOW_COMPLEXITY", "RESPONSIBILITY_OVERLOAD", "COUPLING", "POOR_COHESION", "ARCHITECTURE_VIOLATION", "DUPLICATION", "TESTABILITY", "ABSTRACTION_OVERHEAD", "SIZE_ONLY"]},
+          "location": {"$ref": "#/$defs/text"},
+          "evidence": {"$ref": "#/$defs/nonemptyStrings"},
+          "impact": {"$ref": "#/$defs/text"},
+          "action": {"$ref": "#/$defs/text"},
+          "priority": {"enum": ["high", "medium", "low"]}
+        }
+      }
+    },
+    "comparison": {
+      "type": "array", "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["signal", "role", "before_entities", "after_entities", "result", "rationale"],
+        "properties": {
+          "signal": {"$ref": "#/$defs/text"},
+          "role": {"enum": ["target", "guard"]},
+          "before_entities": {"$ref": "#/$defs/strings"},
+          "after_entities": {"$ref": "#/$defs/strings"},
+          "result": {"enum": ["improved", "unchanged", "regressed", "unknown", "new", "removed"]},
+          "rationale": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
+    "decision": {
+      "type": "object", "additionalProperties": false,
+      "required": ["outcome", "rationale", "gaps", "criteria"],
+      "properties": {
+        "outcome": {"enum": ["assessment", "accepted", "rejected", "inconclusive"]},
+        "rationale": {"$ref": "#/$defs/text"},
+        "gaps": {"$ref": "#/$defs/strings"},
+        "criteria": {
+          "type": "object", "additionalProperties": false,
+          "required": ["required_checks", "behavior_compatibility", "architecture_ratchet", "targeted_improvement", "regression_guards", "abstraction_justification"],
+          "properties": {
+            "required_checks": {"$ref": "#/$defs/criterion"},
+            "behavior_compatibility": {"$ref": "#/$defs/criterion"},
+            "architecture_ratchet": {"$ref": "#/$defs/criterion"},
+            "targeted_improvement": {"$ref": "#/$defs/criterion"},
+            "regression_guards": {"$ref": "#/$defs/criterion"},
+            "abstraction_justification": {"$ref": "#/$defs/criterion"}
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"mode": {"const": "assessment"}}},
+      "then": {"properties": {"before": {"$ref": "#/$defs/snapshot"}, "after": {"type": "null"}, "decision": {"properties": {"outcome": {"const": "assessment"}}}}},
+      "else": {"properties": {"decision": {"properties": {"outcome": {"enum": ["accepted", "rejected", "inconclusive"]}}}}}
+    },
+    {
+      "if": {"properties": {"mode": {"enum": ["modification", "refactoring", "architecture"]}}},
+      "then": {"properties": {"before": {"$ref": "#/$defs/snapshot"}}}
+    },
+    {
+      "if": {"properties": {"decision": {"properties": {"outcome": {"const": "accepted"}}}}},
+      "then": {
+        "properties": {
+          "after": {
+            "allOf": [
+              {"$ref": "#/$defs/snapshot"},
+              {"properties": {"checks": {"minItems": 1, "contains": {"properties": {"required": {"const": true}}}, "items": {"if": {"properties": {"required": {"const": true}}}, "then": {"properties": {"status": {"enum": ["pass", "not_applicable"]}}}}}}}
+            ]
+          },
+          "comparison": {"minItems": 1},
+          "decision": {"properties": {"criteria": {"additionalProperties": {"properties": {"status": {"enum": ["pass", "not_applicable"]}}}}}}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "text": {"type": "string", "minLength": 1},
+    "strings": {"type": "array", "items": {"$ref": "#/$defs/text"}, "uniqueItems": true},
+    "nonemptyStrings": {"allOf": [{"$ref": "#/$defs/strings"}], "minItems": 1},
+    "criterion": {
+      "type": "object", "additionalProperties": false, "required": ["status", "rationale"],
+      "properties": {"status": {"enum": ["pass", "fail", "unknown", "not_applicable"]}, "rationale": {"$ref": "#/$defs/text"}}
+    },
+    "measurement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "value", "unit", "method", "evidence"],
+      "properties": {
+        "status": {"enum": ["measured", "estimated", "unavailable", "not_applicable"]},
+        "value": {"type": ["number", "null"], "minimum": 0},
+        "unit": {"$ref": "#/$defs/text"},
+        "method": {"$ref": "#/$defs/text"},
+        "evidence": {"$ref": "#/$defs/strings"},
+        "reason": {"$ref": "#/$defs/text"}
+      },
+      "allOf": [{
+        "if": {"properties": {"status": {"enum": ["measured", "estimated"]}}},
+        "then": {"properties": {"value": {"type": "number"}, "evidence": {"minItems": 1}}},
+        "else": {"required": ["reason"], "properties": {"value": {"type": "null"}}}
+      }]
+    },
+    "ratio": {"allOf": [{"$ref": "#/$defs/measurement"}, {"properties": {"value": {"maximum": 1}, "unit": {"const": "ratio"}}}]},
+    "entity": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "path", "kind", "predecessors", "signals", "observations"],
+      "properties": {
+        "id": {"$ref": "#/$defs/text"}, "path": {"$ref": "#/$defs/text"},
+        "kind": {"enum": ["function", "class", "file", "module"]},
+        "symbol": {"$ref": "#/$defs/text"},
+        "predecessors": {"$ref": "#/$defs/strings"},
+        "signals": {
+          "type": "object", "additionalProperties": false,
+          "properties": {
+            "cognitive_complexity": {"$ref": "#/$defs/measurement"},
+            "cyclomatic_complexity": {"$ref": "#/$defs/measurement"},
+            "max_nesting": {"$ref": "#/$defs/measurement"},
+            "nloc": {"$ref": "#/$defs/measurement"},
+            "parameters": {"$ref": "#/$defs/measurement"},
+            "fan_out": {"$ref": "#/$defs/measurement"},
+            "cohesion": {"$ref": "#/$defs/measurement"},
+            "branch_coverage": {"$ref": "#/$defs/ratio"},
+            "mutation_score": {"$ref": "#/$defs/ratio"},
+            "change_frequency": {"$ref": "#/$defs/measurement"},
+            "crap": {"$ref": "#/$defs/measurement"}
+          }
+        },
+        "observations": {"$ref": "#/$defs/strings"}
+      }
+    },
+    "check": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "required", "scope", "method", "status", "evidence"],
+      "properties": {
+        "id": {"$ref": "#/$defs/text"},
+        "kind": {"enum": ["tests", "architecture", "compatibility", "other"]},
+        "required": {"type": "boolean"},
+        "scope": {"$ref": "#/$defs/nonemptyStrings"},
+        "method": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["pass", "fail", "not_run", "unknown", "not_applicable"]},
+        "evidence": {"$ref": "#/$defs/nonemptyStrings"}
+      }
+    },
+    "architecture": {
+      "type": "object", "additionalProperties": false,
+      "required": ["status", "scope", "method", "evidence", "violations"],
+      "properties": {
+        "status": {"enum": ["complete", "partial", "unavailable"]},
+        "scope": {"$ref": "#/$defs/nonemptyStrings"},
+        "method": {"$ref": "#/$defs/text"},
+        "evidence": {"$ref": "#/$defs/nonemptyStrings"},
+        "violations": {
+          "type": "array", "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["id", "kind", "rule_id", "edges", "evidence"],
+            "properties": {
+              "id": {"$ref": "#/$defs/text"},
+              "kind": {"enum": ["cycle", "forbidden_dependency", "boundary"]},
+              "rule_id": {"$ref": "#/$defs/text"},
+              "edges": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {
+                "type": "object", "additionalProperties": false, "required": ["from", "to"],
+                "properties": {"from": {"$ref": "#/$defs/text"}, "to": {"$ref": "#/$defs/text"}}
+              }},
+              "evidence": {"$ref": "#/$defs/nonemptyStrings"}
+            }
+          }
+        }
+      }
+    },
+    "snapshot": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_state", "entities", "checks", "architecture"],
+      "properties": {
+        "source_state": {"$ref": "#/$defs/text"},
+        "entities": {"type": "array", "items": {"$ref": "#/$defs/entity"}},
+        "checks": {"type": "array", "items": {"$ref": "#/$defs/check"}},
+        "architecture": {"$ref": "#/$defs/architecture"}
+      }
+    }
+  }
+}
