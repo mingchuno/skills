@@ -1,8 +1,8 @@
 ---
 name: concise-docs
-description: Write and edit concise technical documentation. Use for README, architecture docs, ADRs, design docs, implementation notes, and developer guides.
+description: Write and edit concise technical documentation. Use for README, architecture docs, ADRs, design docs, implementation notes, developer guides, change request descriptions, and commit messages.
 metadata:
-  version: "1.1.0"
+  version: "1.2.0"
   scope: language-agnostic
 ---
 
@@ -22,3 +22,6 @@ Prefer normal concise prose over telegraphic/caveman English.
 
 When editing existing documentation, aim for 50–70% of its current prose unless
 doing so would lose useful information.
+
+For change request (PR/MR) descriptions and commit messages, follow
+[references/pull-requests.md](references/pull-requests.md).
