@@ -14,41 +14,58 @@ Reusable agent instructions for assessing code quality, refactoring safely, desi
 
 If you are unsure where to start, ask **Code Quality** for an assessment without edits. Choose **Refactoring** when the target is already clear, or **Production Software Architecture** when the problem spans system boundaries.
 
+## Supported agents
+
+Every skill is a standard [Agent Skills](https://agentskills.io) folder: a `SKILL.md` with `name` and `description`, plus optional references and assets. Any agent that reads that format can use it without extra setup.
+
+| Agent | Skills CLI `--agent` | Invoke explicitly | Disables automatic selection via |
+| --- | --- | --- | --- |
+| Codex (OpenAI) | `codex` | `$skill-name` | `agents/openai.yaml` → `policy.allow_implicit_invocation: false` |
+| Claude Code | `claude-code` | `/skill-name` | `SKILL.md` → `disable-model-invocation: true` |
+| GitHub Copilot (VS Code) | `github-copilot` | `/skill-name` | `SKILL.md` → `disable-model-invocation: true` |
+| Other agents | see [agent list](https://github.com/vercel-labs/skills/blob/main/docs/agents.md) | agent-specific | Usually none; the skill may be selected automatically |
+
+Code Quality, Refactoring, and Production Software Architecture are explicit-only in Codex, Claude Code, and Copilot. Concise Technical Documentation and JS/TS Project Scaffolding can be selected automatically for matching tasks.
+
+When adding a skill, keep the two settings in sync: an explicit-only skill needs both `disable-model-invocation: true` and `agents/openai.yaml`. Other agents ignore both.
+
+See [Codex skills](https://learn.chatgpt.com/docs/build-skills), [Claude Code skills](https://code.claude.com/docs/en/skills), and [Copilot agent skills](https://code.visualstudio.com/docs/copilot/customization/agent-skills).
+
 ## Install
 
-You need Node.js/npm with `npx` available. The examples use the [Skills CLI](https://github.com/vercel-labs/skills) and target Codex.
+You need Node.js/npm with `npx` available. The examples use the [Skills CLI](https://github.com/vercel-labs/skills). Replace `<agent>` with an ID from the table, such as `codex`, `claude-code`, or `github-copilot`.
 
 Install one skill for use across your projects:
 
 ```bash
-npx skills add mingchuno/skills --skill code-quality --agent codex -g
+npx skills add mingchuno/skills --skill code-quality --agent <agent> -g
 ```
 
 Replace `code-quality` with any skill ID from the table. To install every skill in this repository:
 
 ```bash
-npx skills add mingchuno/skills --skill '*' --agent codex -g
+npx skills add mingchuno/skills --skill '*' --agent <agent> -g
 ```
 
 For a project-only installation, run the command from that project's root and omit `-g`:
 
 ```bash
-npx skills add mingchuno/skills --skill code-quality --agent codex
+npx skills add mingchuno/skills --skill code-quality --agent <agent>
 ```
 
-For another supported agent, omit `--agent codex` and select your agent interactively. Add `-y` to skip confirmation prompts.
+Omit `--agent` to choose one or more agents interactively. Add `-y` to skip confirmation prompts.
 
-Verify your global Codex installation:
+Verify your global installation:
 
 ```bash
-npx skills ls -g --agent codex
+npx skills ls -g --agent <agent>
 ```
 
-Use `npx skills ls --agent codex` to include project installations. When copying skills manually, keep the complete skill folder, including its references, assets, and agent configuration.
+Omit `-g` to include project installations. When copying skills manually, keep the complete skill folder, including its references, assets, and `agents/` configuration.
 
 ## Use a skill
 
-Open the project you want to work on in Codex. Include `$skill-name` in your prompt, followed by the **target**, **desired outcome**, and **constraints**. State whether you want assessment, a plan, or implementation.
+Open the project you want to work on in your agent. Invoke the skill by name (`$skill-name` in Codex, `/skill-name` in Claude Code and Copilot), followed by the **target**, **desired outcome**, and **constraints**. State whether you want assessment, a plan, or implementation. The examples use Codex syntax.
 
 **Assess before editing:**
 
@@ -79,8 +96,6 @@ $production-software-architecture Review the billing API and plan a backward-com
 ```text
 $concise-docs Edit README.md for first-time users. Make installation and usage easy to find while preserving working commands and important constraints.
 ```
-
-In Codex, Code Quality, Refactoring, and Production Software Architecture require explicit invocation. Concise Technical Documentation and JS/TS Project Scaffolding allow automatic selection for matching tasks. These settings are specific to Codex; other agents may handle invocation differently. See [Codex skill invocation](https://learn.chatgpt.com/docs/build-skills#how-chatgpt-and-codex-use-skills).
 
 ## Workflow details
 

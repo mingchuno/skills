@@ -1,5 +1,6 @@
 ---
 name: code-quality
+disable-model-invocation: true
 description: Assess maintenance hotspots, reduce complexity, or review architecture fitness using quality signals, test confidence, and before/after evidence. Use for scoped code-quality assessment and improvement.
 ---
 
