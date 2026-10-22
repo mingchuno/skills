@@ -1,0 +1,5 @@
+interface:
+  display_name: "Start Work (lite)"
+  short_description: "Groom, route and deliver a task to a change request"
+policy:
+  allow_implicit_invocation: false
