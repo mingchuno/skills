@@ -8,6 +8,7 @@ keep it short enough to read in a minute.
 
 | Section | A | B | C |
 | --- | --- | --- | --- |
+| Gate line | — | Yes | Yes |
 | Intent | Yes | Yes | Yes |
 | Acceptance criteria | Yes, or a reproducible failure | Yes | Yes |
 | Scope (in and out) | Yes | Yes | Yes |
@@ -21,6 +22,7 @@ keep it short enough to read in a minute.
 ## Work contract
 
 **Track:** B: <one-line reason> · **Revision:** 1
+**Gate:** <interactive, or autonomous: <basis>; no open decisions; <rollback kind> rollback>
 
 ### Intent
 <the problem and the outcome, in one or two sentences>
@@ -61,5 +63,5 @@ of an issue.
   stable when the implementation strategy changes.
 - Scope names paths or areas; delivery checks the diff against it.
 - Raise the revision whenever intent, acceptance, scope or design changes.
-  Approval applies to one revision.
+  Approval applies to one revision, and so does an autonomous pass.
 - Cite evidence by path or link. Keep credentials and sensitive data out.
