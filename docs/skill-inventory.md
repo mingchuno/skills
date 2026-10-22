@@ -13,7 +13,18 @@ instead of several upstream repositories.
 | Required for delegated work. | Optional: `start-work` says "use X if installed" and works without it. |
 | Workflow contracts (WorkContract, review JSON). | Techniques that can produce those contracts. |
 
-No skill here contains routing, approval, or publication logic.
+One exception: `start-work-lite` routes, gates and publishes inside a single
+session. It is independent of agent-workflows and does not require it; install
+one or the other. It has no enforcement: approval is the human's word in chat
+or on the issue. agent-workflows is the durable, enforced version of the same
+tracks. Every other skill here contains no routing, approval, or publication
+logic.
+
+`start-work-lite` loads companion skills by name when the host allows it, and
+otherwise reads `../<skill>/SKILL.md` beside its folder. That is how it reaches
+explicit-only skills such as `refactoring` and
+`production-software-architecture`, which no other skill can invoke. Each
+companion has a one-line fallback, so the skill works alone.
 
 ## Sources
 
@@ -73,6 +84,7 @@ Their descriptions are narrow to keep the always-loaded cost small.
 | `code-review` | Yes | Referenced by the fast path's review step. |
 | `domain-docs` | Yes | Referenced by knowledge capture; ADR edits should follow the convention. |
 | `clarify` | No | An interview is the user's choice. `start-work` suggests it rather than loading it. |
+| `start-work-lite` | No | An entry point the user invokes; its own grooming covers clarification. |
 
 ## start-work references
 

@@ -17,6 +17,7 @@ This is the engineering-technique companion to [agent-workflows](https://github.
 | [Refactoring](refactoring/SKILL.md) (`refactoring`) | You have selected code whose structure needs improving while preserving behavior. | Small, reviewable transformations with relevant checks. |
 | [Production Software Architecture](production-software-architecture/SKILL.md) (`production-software-architecture`) | You need to design or review boundaries, dependencies, compatibility, migrations, or production readiness. | Recommendations or implementation grounded in system constraints, failure modes, and trade-offs. |
 | [Concise Technical Documentation](concise-docs/SKILL.md) (`concise-docs`) | A README, ADR, design document, developer guide, change request description, or commit message needs clearer, shorter prose. | Focused documentation that preserves commands, constraints, and technical meaning. |
+| [Start Work (lite)](start-work-lite/SKILL.md) (`start-work-lite`) | You want one entry point from an issue or task to a change request, without installing a workflow backend. | Focused grooming, a Track A/B/C route, a work contract published to the issue, then implementation, one self-review round, and a PR or MR. |
 | [JS/TS Project Scaffolding](js-ts-project-scaffolding/SKILL.md) (`js-ts-project-scaffolding`) | You are creating a new JavaScript or TypeScript Node.js or web project. | A minimal, requirements-led stack with preferred tooling and conditional libraries. |
 
 For a bug, start with **Debugging**; for a review, **Code Review**. If you are unsure where to start on existing code, ask **Code Quality** for an assessment without edits. Choose **Refactoring** when the target is already clear, or **Production Software Architecture** when the problem spans system boundaries.
@@ -32,7 +33,7 @@ Every skill is a standard [Agent Skills](https://agentskills.io) folder: a `SKIL
 | GitHub Copilot (VS Code) | `github-copilot` | `/skill-name` | `SKILL.md` → `disable-model-invocation: true` |
 | Other agents | see [agent list](https://github.com/vercel-labs/skills/blob/main/docs/agents.md) | agent-specific | Usually none; the skill may be selected automatically |
 
-Clarify, Code Quality, Refactoring, and Production Software Architecture are explicit-only in Codex, Claude Code, and Copilot. The other skills can be selected automatically for matching tasks. Debugging, TDD, Code Review, and Domain Docs stay selectable because `start-work` loads them, which explicit-only skills would prevent; see [invocation policy](docs/skill-inventory.md#invocation-policy).
+Start Work (lite), Clarify, Code Quality, Refactoring, and Production Software Architecture are explicit-only in Codex, Claude Code, and Copilot. The other skills can be selected automatically for matching tasks. Debugging, TDD, Code Review, and Domain Docs stay selectable because `start-work` (agent-workflows) and `start-work-lite` load them, which explicit-only skills would prevent; see [invocation policy](docs/skill-inventory.md#invocation-policy).
 
 When adding a skill, keep the two settings in sync: an explicit-only skill needs both `disable-model-invocation: true` and `agents/openai.yaml`. Other agents ignore both.
 
