@@ -1,0 +1,16 @@
+{
+  "name": "mingchuno/skills",
+  "description": "Reusable agent skills for software engineering.",
+  "skills": [
+    "./clarify",
+    "./code-quality",
+    "./code-review",
+    "./concise-docs",
+    "./debugging",
+    "./domain-docs",
+    "./js-ts-project-scaffolding",
+    "./production-software-architecture",
+    "./refactoring",
+    "./tdd"
+  ]
+}
