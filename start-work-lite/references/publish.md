@@ -23,17 +23,26 @@ scripts/issue-contract.sh create "Notify after webhook retries" /path/to/contrac
 scripts/issue-contract.sh read 123
 ```
 
-`scripts/` is relative to this skill's folder. The script picks `gh` or `glab`
-from the `origin` remote; set `START_WORK_HOST=github` or `gitlab` for a host
-it cannot recognize. `create` prints the new issue's URL; use its number from
-then on.
+`scripts/` is relative to this skill's folder. Run `preflight` first; it
+prints `host=github` or `host=gitlab`, or exits 2 with what to fix. `create`
+prints the new issue's URL; use its number from then on.
+
+The script picks `gh` or `glab` from the `origin` remote. For a host whose
+name contains neither `github` nor `gitlab`, such as a self-hosted GitLab
+instance, it uses `glab` when `glab repo view` reaches the repository, then
+`gh` for GitHub Enterprise. Authenticate the CLI for that host first
+(`glab auth login --hostname <host>`), or set `START_WORK_HOST=github` or
+`gitlab`. GitLab needs `jq`.
+
+After changing the script, run `bash scripts/issue-contract.test.sh`.
 
 Without the script (no POSIX shell), do the same by hand: read the body
 (`gh issue view N --json body -q .body` or
-`glab issue view N -F json --jq .description`), replace the text between
+`glab issue view N -F json | jq -r .description`), replace the text between
 `<!-- start-work-lite:contract -->` and `<!-- /start-work-lite:contract -->`,
 or append both markers with the contract between them, then write the body
 back with `gh issue edit N --body-file FILE` or
-`glab issue update N --description "$(cat FILE)"`.
+`glab issue update N --description "$(cat FILE)"`. Stop if the markers appear
+more than once or unpaired.
 
 After publishing, link the issue in the gate message.
