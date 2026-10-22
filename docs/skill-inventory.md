@@ -22,9 +22,8 @@ logic.
 
 `start-work-lite` loads companion skills by name when the host allows it, and
 otherwise reads `../<skill>/SKILL.md` beside its folder. That is how it reaches
-explicit-only skills such as `refactoring` and
-`production-software-architecture`, which no other skill can invoke. Each
-companion has a one-line fallback, so the skill works alone.
+the explicit-only `clarify` and `code-quality`, which no other skill can
+invoke. Each companion has a one-line fallback, so the skill works alone.
 
 ## Sources
 
@@ -37,6 +36,10 @@ Read on 2026-10-21. All are MIT-licensed; notices are in
 | mattpocock | mattpocock/skills | `5beb35b` |
 | pstack | Aqua-123/pstack-for-codex (port of cursor/plugins pstack 0.15.24) | `d5b20bc` |
 | spec-kit | github/spec-kit | reference only |
+
+`AGENTS.md` also lists addyosmani/agent-skills and luckys/agent-skills as
+references. Nothing has been ported from them yet; add a row here when a skill
+is compared against them.
 
 ## Inventory
 
@@ -64,27 +67,33 @@ Read on 2026-10-21. All are MIT-licensed; notices are in
 
 | Existing skill | Overlap | Resolution |
 | --- | --- | --- |
-| `code-quality` | Code review also judges maintainability. | `code-quality` assesses hotspots across a scope; `code-review` judges one diff against its spec. |
-| `refactoring` | TDD's refactor step; review's smell baseline. | `tdd` refactors only while green and small; larger restructuring goes to `refactoring`. Review reports smells; it does not apply them. |
-| `production-software-architecture` | Debugging's "question the architecture after three failed fixes"; ADRs. | Debugging stops and discusses; architecture work stays in that skill. `domain-docs` owns ADR format. |
+| `code-quality` | Code review also judges maintainability; refactoring applies the moves it recommends. | `code-quality` is the auditor: hotspots, diagnosis, before/after evidence, acceptance. It hands edits to `refactoring` and architecture-rule design to `production-software-architecture`. `code-review` judges one diff against its spec. |
+| `refactoring` | TDD's refactor step; review's smell baseline; architecture's legacy-code techniques. | `refactoring` owns every behavior-preserving move, including seams, sprout and wrap, and branch by abstraction (moved from `production-software-architecture` on 2026-10-22). `tdd` refactors only while green and small. Review reports smells; it does not apply them. |
+| `production-software-architecture` | Debugging's "question the architecture after three failed fixes"; ADRs; refactoring across boundaries. | System level only: boundaries, contracts, failure, migration, operability, guardrails. Its Refactor mode loads `refactoring`. Debugging stops and discusses; `domain-docs` owns ADR format. |
 | `concise-docs` | ADR and PR prose. | `concise-docs` owns prose style and PR descriptions; `domain-docs` owns ADR content rules. |
 | `js-ts-project-scaffolding` | None. | — |
 
 ## Invocation policy
 
-Skills are explicit-only by default. Four new skills allow automatic selection
-because `start-work` references them: in Claude Code and Copilot,
-`disable-model-invocation: true` would stop another skill from loading them.
-Their descriptions are narrow to keep the always-loaded cost small.
+A skill allows automatic selection only when the agent must reach it on its
+own during other work, or another skill must load it: in Claude Code and
+Copilot, `disable-model-invocation: true` stops other skills from loading it
+too. Every other skill is explicit-only and costs no always-loaded context.
+Model-invoked descriptions stay narrow to keep that cost small.
 
 | Skill | Automatic selection | Reason |
 | --- | --- | --- |
-| `debugging` | Yes | Referenced by `start-work` investigation; bugs are common and unrequested guessing is costly. |
-| `tdd` | Yes | Referenced by the fast path's regression-test step. |
-| `code-review` | Yes | Referenced by the fast path's review step. |
-| `domain-docs` | Yes | Referenced by knowledge capture; ADR edits should follow the convention. |
+| `debugging` | Yes | The agent hits failures during other work; `start-work` investigation loads it. |
+| `tdd` | Yes | The fast path's regression-test step loads it. |
+| `code-review` | Yes | Self-review and the fast path's review step load it. |
+| `domain-docs` | Yes | Triggered by editing `CONTEXT.md` or an ADR; knowledge capture loads it. |
+| `concise-docs` | Yes | The agent writes commit messages and change request descriptions unprompted; `start-work-lite` loads it. |
+| `js-ts-project-scaffolding` | Yes | Users ask for a new project without naming the skill. |
+| `refactoring` | Yes | The agent meets structure that blocks the current change; `start-work-lite` delivery loads it. Its scope rule limits unrequested cleanup to the blocking structure. |
+| `production-software-architecture` | Yes | Boundary, contract, schema and migration changes are the riskiest the agent makes unprompted; `start-work-lite` design loads it. |
 | `clarify` | No | An interview is the user's choice. `start-work` suggests it rather than loading it. |
-| `start-work-lite` | No | An entry point the user invokes; its own grooming covers clarification. |
+| `code-quality` | No | A full audit is a deliberate, costly request. Self-review covers complexity through `code-review`'s smell baseline. |
+| `start-work-lite` | No | An entry point with outward effects (issue comments, change requests); its own grooming covers clarification. |
 
 ## start-work references
 
@@ -120,7 +129,9 @@ configuration:
 Checked on 2026-10-21 by installing the five new skills into an empty project
 with `npx skills add <path> --agent claude-code --agent codex --agent
 github-copilot` and asking each headless agent which skills it sees.
-`npx skills add . --list` discovers all ten skills.
+`npx skills add . --list` discovers all ten skills. Not rechecked after
+`refactoring` and `production-software-architecture` became model-invoked on
+2026-10-22.
 
 | Host | Model sees | `clarify` hidden from model | Explicit `clarify` loads |
 | --- | --- | --- | --- |

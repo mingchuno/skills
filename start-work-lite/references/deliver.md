@@ -45,7 +45,7 @@ Otherwise read the diff once for each lens:
 | --- | --- |
 | Correctness | What input, state or sequence makes this fail, lose data or leak access? |
 | Contract | Does every acceptance criterion have evidence? Is anything built that was not asked? |
-| Standards | Where does it break a documented standard, or add complexity `code-quality` would flag? |
+| Standards | Where does it break a documented standard, or add deeper nesting, longer functions, duplicated logic or pass-through layers? |
 
 Fix the blocking findings that stay inside the scope, in one round, then repeat
 step 3. A finding whose fix changes scope, a public interface, a dependency or

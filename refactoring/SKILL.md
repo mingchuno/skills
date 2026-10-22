@@ -1,72 +1,31 @@
 ---
 name: refactoring
-disable-model-invocation: true
-description: Refactor a selected module, file, class, functions, or whole codebase in small steps that preserve observable behavior. Invoke explicitly to improve structure and changeability.
+description: Restructure existing code in small steps that preserve observable behavior. Use when asked to refactor or clean up code, or when existing structure makes the current change awkward and a preparatory refactor would make it easy.
 ---
 
 # Refactoring
 
-## Scope and workflow
+Refactoring is behavior-preserving design work in small, reversible steps. Every step leaves the code buildable, tested and reviewable; the next step is chosen only after the last one is green.
 
-Apply only when the user explicitly invokes this skill. Work on the module, file, class, functions, or whole codebase they select; inspect callers and dependencies as needed to preserve contracts. If no target can be inferred, ask for it before editing.
+## Scope
 
-1. Inspect the target, repository instructions, callers, tests, and verification commands. Identify observable behavior, side effects, error semantics, and compatibility constraints.
-2. Identify concrete structural friction and select the smallest useful transformations. For a whole-codebase request, inventory the major areas, prioritize by impact and risk, and work through coherent slices. Track completed, deferred, and uninspected areas so one improved file is not reported as a completed codebase refactor.
-3. Establish a baseline with relevant checks. Add characterization coverage before risky changes when behavior is unclear; record pre-existing failures and verification gaps.
-4. Apply one coherent transformation at a time and verify affected behavior after each meaningful step. Continue through the requested scope while improvements remain justified. Implement feature or bug-fix behavior only when separately requested.
-5. Review the diff for unintended behavior changes and unrelated churn. Report what improved, checks run and their results, and any remaining work or uncertainty.
+- **Requested refactor:** the module, file, class, functions or codebase the user selected. If no target can be inferred, ask for it before editing.
+- **Preparatory refactor**, reached on your own during other work: only the structure that blocks the current change. Record further cleanup as a follow-up in your report.
 
-## Detailed reference
+Inspect callers and dependencies as needed to preserve contracts, without widening the edit scope. Feature or bug-fix behavior belongs to its own step, made only when the task asked for it.
 
-Read only the relevant sections of [refactoring.md](refactoring.md) when the current transformation needs more detail:
+## Workflow
 
-- [Safety Rules](refactoring.md#safety-rules) and [Testing Rules](refactoring.md#testing-rules): weak tests, unclear behavior, or risky changes.
-- [Code Smell Policy](refactoring.md#code-smell-policy): diagnosing structural friction and choosing a target.
-- [Preferred Refactoring Moves](refactoring.md#preferred-refactoring-moves) and [Refactoring Catalog Index](refactoring.md#refactoring-catalog-index): selecting and sequencing a concrete transformation.
-- [Function-Level Rules](refactoring.md#function-level-rules), [Class and Module Rules](refactoring.md#class-and-module-rules), [Data and Mutation Rules](refactoring.md#data-and-mutation-rules), and [Error Handling Rules](refactoring.md#error-handling-rules): changes to those responsibilities or contracts.
+1. **Pin the contracts.** Read the target, repository instructions, callers, tests and verification commands. List the observable behavior the target touches, using the [contract checklist](refactoring.md#behavior-contracts). Run the baseline checks. Done when every contract is listed and pre-existing failures are recorded.
+2. **Build the safety net.** Where a listed contract has no test that would fail if it broke, add a characterization test and watch it go red under a deliberate perturbation. See [Safety net](refactoring.md#safety-net). Done when each contract is covered or recorded as a verification gap.
+3. **Diagnose.** Name the structural friction and the smallest move that removes it: [Triage](refactoring.md#triage) and [Smells and moves](refactoring.md#smells-and-moves). For a whole codebase, inventory the major areas and rank them by impact and risk; track completed, deferred and uninspected areas so one improved file is never reported as a refactored codebase.
+4. **Transform.** Apply one named move, run the affected checks, repeat. Pick moves from the [catalog](refactoring.md#catalog); for fragile or untested code use [Legacy code](refactoring.md#legacy-code). Commit structural changes apart from behavior changes and test updates.
+5. **Stop and report.** Stop at the [stopping point](refactoring.md#stopping-point). Review the diff against the [final checklist](refactoring.md#final-checklist), then report what improved, the checks run with their results, and remaining work or gaps.
 
-The reference applies within the user's requested scope. Its feature-work sequences apply only when a behavior change was requested; a pure refactor preserves behavior throughout.
+When the diff starts to outgrow the behavior being changed, or the next move is a rewrite, return to step 3 and pick the next small move that recovers control. See [Reassess](refactoring.md#reassess).
 
-## Primary bias to correct
+## Related skills
 
-Refactoring is behavior-preserving design work in small steps. Do not turn cleanup into a rewrite, a hidden feature change, or speculative architecture.
-
-## Decision rules
-
-- Preserve observable behavior during refactoring. Isolate behavior changes from structural changes and never disguise a feature, migration, or redesign as cleanup.
-- Work in small, reversible, buildable, testable, reviewable steps. Split a patch when it is too large to reason about locally.
-- Establish or identify a safety net before risky refactoring. Use characterization tests for unclear behavior, keep test updates aligned with intended behavior, and never delete a failing test to finish cleanup.
-- Use preparatory and follow-up refactoring around feature work: identify what makes the requested change awkward, reshape that local structure first when useful, make the behavior change, then clean debt introduced by the change.
-- Refactor the current blocking smell, not every smell in sight: duplication, long functions, long parameter lists, globals, divergent change, shotgun surgery, feature envy, primitive obsession, repeated conditionals, temporary fields, middle men, or speculative generality.
-- Prefer the simplest named move that helps: rename, extract, inline, move, split meanings, introduce a parameter or value object, encapsulate a field or collection, decompose conditionals, use guard clauses, or substitute a clearer algorithm.
-- Make names and functions reveal intent. Rename before deeper work when bad names block understanding; keep functions coherent, at one abstraction level, with tight variable scope and separated phases.
-- Put behavior and state with the concept that owns them. Split classes or modules with multiple reasons to change; separate business policy from formatting, transport, persistence, I/O, frameworks, and integration details.
-- Keep data, mutation, and call contracts explicit. Avoid behavior-switching boolean flags, confusing argument order, parameter reassignment, exposed mutable collections, unnecessary setters, public fields, and duplicated state-transition logic.
-- Simplify conditionals honestly. Use guard clauses, extracted predicates, lookup tables, consolidated duplicate fragments, state, strategy, polymorphism, or null objects only when they reduce repeated branching or clarify variation.
-- Use abstraction and generalization only when current evidence justifies them. Remove pass-through layers, vague utilities, middle men, unused hierarchy, and just-in-case interfaces that do not improve changeability.
-- Preserve error semantics unless intentionally changing behavior. Refactor error handling to reveal the main path and consolidate duplicate validation, cleanup, recovery, or error structures.
-- Keep patch intent reviewable. Group related refactorings, separate structural edits from behavior where practical, and avoid giant patches that rename, move, redesign, and change logic together.
-- Stop when the requested change is easy, the blocking smell is gone, readability and local changeability are clearly better, and the next cleanup would be speculative.
-
-## Situational rules
-
-- When adding behavior, first ask what structural friction blocks the change; refactor before the feature only when it makes the feature safer or simpler.
-- When fixing a bug in unclear code, characterize the current failure and refactor only enough to make the fix visible before changing behavior.
-- When tests are absent or weak, make the smallest possible structural move and improve testability before attempting broader cleanup.
-- When the same edit appears for a third time, remove duplication through clearer ownership instead of copying again.
-- When a function mixes responsibilities, abstraction levels, phases, or hidden side effects, rename, extract, split phases, or isolate side effects before adding more logic.
-- When one change forces edits across many files, centralize the knowledge or introduce a clearer boundary.
-- When repeated conditionals or type codes grow, decompose intent first; introduce polymorphism, state, strategy, or a table only when the variation is real.
-- When UI and domain behavior mix, move rules toward domain objects and verify any required presentation synchronization.
-- When a patch mixes intents or code motion makes review hard, split the change unless context makes that impractical.
-- When tempted to rewrite, choose the next small behavior-preserving transformation that recovers control.
-
-## Final checklist
-
-- Observable behavior preserved?
-- Structural change, behavior change, and test updates separated where practical?
-- Safety net, characterization, or verification gap recorded?
-- At least one real source of friction removed?
-- Names, responsibilities, control flow, data ownership, and interfaces clearer?
-- Patch still reviewable and runnable?
-- Cleanup stopped before speculative abstraction or rewrite pressure took over?
+- The red-green loop's own refactor step belongs to `tdd`; larger restructuring belongs here.
+- A move that crosses a module or service boundary, or changes a public API, schema or data layout, is architecture work: use `production-software-architecture`.
+- To measure whether complexity actually dropped, the user can invoke `code-quality`.

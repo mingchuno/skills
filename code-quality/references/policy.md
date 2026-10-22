@@ -2,7 +2,7 @@
 
 Use executable repository rules and documented contracts as authority. Derive candidate ownership boundaries from callers, dependencies, and state, but label inference. A generic layered architecture example does not authorize imposing those layers on a repository.
 
-The optional [architecture-policy.yaml](../assets/architecture-policy.yaml) is an agent-readable template. Its fields describe policy; v1 includes no runner that enforces them. Copy and tailor it only when a durable policy is requested or needed for the authorized task. Record the selected policy file or inline policy summary in the report.
+The optional [architecture-policy.yaml](../assets/architecture-policy.yaml) is an agent-readable template. Its fields describe policy; v1 includes no runner that enforces them. Copy and tailor it only when a durable policy is requested or needed for the authorized task. Record the selected policy file or inline policy summary in the report. Deciding which architecture rules a repository should enforce is design work for `production-software-architecture`; this skill compares a change against the rules that exist.
 
 ## Baseline
 

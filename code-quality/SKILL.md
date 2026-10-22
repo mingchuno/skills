@@ -1,20 +1,24 @@
 ---
 name: code-quality
 disable-model-invocation: true
-description: Assess maintenance hotspots, reduce complexity, or review architecture fitness using quality signals, test confidence, and before/after evidence. Use for scoped code-quality assessment and improvement.
+description: Find maintenance hotspots and judge, with quality signals and before/after evidence, whether a change actually reduced complexity and risk.
 ---
 
 # Code quality
 
-Reduce the cost and risk of understanding and changing software. Preserve required behavior and useful boundaries. Treat metrics as diagnostic evidence, never as a single clean-code score.
+The auditor: measure where understanding and changing the code is costly, diagnose why, and decide whether a change paid off. Metrics are diagnostic evidence, never a single clean-code score. Edits themselves are made with the `refactoring` skill; designing boundaries or architecture rules belongs to `production-software-architecture`.
 
 ## Scope
 
-Distinguish assessment, new implementation, modification, refactoring, and architectural restructuring from the request. Assessment produces findings without editing production code. A refactoring request preserves observable behavior; an implementation request permits only its specified behavior changes. Inspect callers and dependencies as needed, without expanding the edit scope.
+Classify the request:
 
-For a whole-codebase task, inventory the major areas and record inspected, completed, deferred, and uninspected scope. Prioritize maintenance hotspots within that scope; the largest metric alone does not determine priority. If no target can be inferred, ask for it.
+- **Assessment:** prioritized findings, no edits to production code.
+- **Improvement:** a diagnosed hotspot reduced through behavior-preserving changes, with before/after evidence.
+- **Judgment:** an existing or new change (refactor, modification, new implementation, architectural restructuring) evaluated against the acceptance rules.
 
-For architectural restructuring, include dependency and public-contract differences in the comparison. For new implementation, evaluate the requested behavior, design, and integration effects without inventing a prior implementation. Routine changes need only relevant evidence; a full metric inventory or JSON report is not mandatory.
+Inspect callers and dependencies as needed, without expanding the edit scope. If no target can be inferred, ask for it. For a whole-codebase task, inventory the major areas and record inspected, completed, deferred, and uninspected scope; prioritize hotspots within it, since the largest metric alone does not set priority.
+
+For architectural restructuring, include dependency and public-contract differences in the comparison. For new implementation, evaluate the requested behavior, design, and integration effects without inventing a prior implementation. Routine changes need only relevant evidence; a full metric inventory or JSON report is optional.
 
 ## Quality model
 
@@ -30,9 +34,9 @@ For architectural restructuring, include dependency and public-contract differen
 
 1. **Establish constraints.** Read repository instructions, the selected code, callers, tests, and architecture rules. Record the starting revision and working-tree state, allowed behavior changes, verification commands, and existing failures. For ratchet and policy semantics, read [policy.md](references/policy.md). Infer candidate boundaries from code only as hypotheses; distinguish them from documented or executable requirements.
 2. **Acquire evidence.** Read [measurement.md](references/measurement.md). Use existing analyzers and checks where available; retain their versions, configuration, scope, and raw evidence locations. Read [tool-selection.md](references/tool-selection.md) when existing evidence is insufficient or collectors need choosing. Missing measurements remain unknown, never zero. Use explicit qualitative observations when tooling is unavailable. Do not install a quality platform or modify CI merely to assess a scope.
-3. **Diagnose.** Examine architecture violations and behavior/test risk before local complexity, then nesting/size, cohesion, coupling, duplication, and abstraction overhead. Classify the dominant problem using [playbook.md](references/playbook.md). Link each finding to code and describe a concrete difficulty it causes. Size alone is insufficient justification for extraction. An assessment ends with prioritized findings and verification gaps.
-4. **Protect behavior.** Before risky edits, add focused characterization or regression coverage for relevant contracts, failure paths, state transitions, and side effects. Tests that merely execute code do not establish behavioral confidence. Use mutation testing selectively when its likely value warrants the cost. Record unresolved verification gaps before proceeding with any bounded change.
-5. **Make one coherent change.** Select the smallest transformation justified by the diagnosis. State the target signal and relevant regression guards first. Added abstractions need an actual responsibility, variation point, boundary, or shared reason to change. For new code, apply these constraints to the requested design and compare integration effects against the existing repository.
+3. **Diagnose.** Examine architecture violations and behavior/test risk before local complexity, then nesting/size, cohesion, coupling, duplication, and abstraction overhead. Classify the dominant problem using [playbook.md](references/playbook.md). Link each finding to code and describe a concrete difficulty it causes; size alone never justifies extraction. An assessment ends here, with prioritized findings and verification gaps.
+4. **Set the target.** For an improvement, state the dominant diagnosis, the target signal, and the regression guards before editing. Where test confidence is weak, name the contracts that need characterization; use mutation testing selectively when its likely value warrants the cost.
+5. **Change through `refactoring`.** Load the `refactoring` skill and apply its workflow to the diagnosed target, with step 4's guards as its regression checks. Added abstractions need an actual responsibility, variation point, boundary, or shared reason to change. Without the skill, make one small behavior-preserving transformation at a time and run the affected checks after each.
 6. **Verify and compare.** Run affected checks, inspect behavior and dependency changes, and repeat relevant measurements with comparable methods. Include extracted helpers, callers, and the enclosing module so moving complexity cannot masquerade as removing it. Read [reporting.md](references/reporting.md) for the comparison contract and machine-readable report assets.
 7. **Decide and stop.** Apply the acceptance rules below. Revise a rejected transformation or undo only agent-owned changes from that transformation, preserving other work. Continue across the requested scope while justified problems remain. Stop when the dominant difficulty is resolved and constraints hold; crossing every soft threshold is not a completion condition.
 

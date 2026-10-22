@@ -1,15 +1,12 @@
 ---
 name: production-software-architecture
-disable-model-invocation: true
-description: Design, review, evolve, and refactor production software for long-term maintainability, including boundaries, compatibility, operability, and architecture guardrails. Invoke explicitly for system-level architecture work.
+description: Design and review production system structure for long-term change safety. Use when a change crosses a module or service boundary, alters a public API, event or schema, migrates data, adds infrastructure, or when asked to design or review architecture.
 metadata:
   version: "1.1.0"
   scope: language-agnostic
 ---
 
 # Production Software Architecture
-
-Apply only when the user explicitly invokes this skill.
 
 Use this skill to make software easier to change safely over years of production use. Optimize for comprehensibility, explicit boundaries, controlled coupling, operational safety, and reversible evolution—not maximum abstraction or architectural fashion.
 
@@ -33,7 +30,7 @@ Before changing code, decide which mode applies:
 1. **Explore** — understand an unfamiliar codebase or subsystem.
 2. **Design** — plan a new capability or substantial structural change.
 3. **Implement** — add behavior within an established architecture.
-4. **Refactor** — improve structure without intentionally changing behavior.
+4. **Refactor** — improve structure without intentionally changing behavior. Load the `refactoring` skill; this skill adds only the boundary, contract, and compatibility concerns of the move.
 5. **Migrate** — evolve data, APIs, infrastructure, dependencies, or runtime behavior safely.
 6. **Review** — assess a proposal, PR, subsystem, or architecture for production fitness.
 7. **Harden** — add mechanical guardrails, observability, failure handling, security, or operational controls.
@@ -111,7 +108,7 @@ During implementation:
 
 If existing design makes the change unsafe, perform the minimum preparatory refactor first.
 
-For legacy, high-risk, AI-generated, duplicated, overly long, or poorly separated code, read `references/safe-change-and-refactoring.md` before editing. Use its structural-triage workflow to distinguish local code smells from boundary problems and select the smallest safe improvement.
+For legacy, high-risk, duplicated, overly long, or poorly separated code, load the `refactoring` skill before editing: it owns triage, seams, sprout and wrap, and branch by abstraction. Keep the boundary decision here.
 
 ### 6. Verify behavior and architecture
 
@@ -238,7 +235,6 @@ Load only the references needed for the task:
 
 - `references/system-understanding.md` — exploring unfamiliar or legacy systems.
 - `references/boundaries-and-modularity.md` — modules, coupling, cohesion, dependencies, abstractions, deep modules.
-- `references/safe-change-and-refactoring.md` — incremental refactoring and legacy-code modification.
 - `references/testing-and-verification.md` — test strategy, characterization, contracts, architecture checks.
 - `references/failure-data-and-evolution.md` — failures, distributed behavior, data consistency, schemas, migrations, compatibility.
 - `references/operability-and-production-readiness.md` — observability, reliability, deployment, capacity, security basics.

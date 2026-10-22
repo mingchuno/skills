@@ -133,6 +133,6 @@ there. When neither exists, apply the fallback.
 | `domain-docs` | A domain term or a durable decision is settled. | [design.md](references/design.md#knowledge). |
 | `tdd` | Implementing behavior, or a regression test for a defect. | Test fails before the change, passes after. |
 | `refactoring` | Existing structure must change first to make the change easy. | Behavior-preserving steps, tests green after each. |
-| `code-quality` | The change lands in a hotspot, or self-review finds complexity grew. | Smaller functions, clearer names, no duplication. |
+| `code-quality` | The human asks to assess or measure complexity in the touched area. | Report the hotspot as a limitation in the change request. |
 | `code-review` | Self-review. | [deliver.md](references/deliver.md#5-self-review-once). |
 | `concise-docs` | Change request description, commit message, ADR prose. | Short, factual, commands preserved. |
