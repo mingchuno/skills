@@ -8,6 +8,7 @@
     "./concise-docs",
     "./debugging",
     "./domain-docs",
+    "./eli5",
     "./js-ts-project-scaffolding",
     "./production-software-architecture",
     "./refactoring",

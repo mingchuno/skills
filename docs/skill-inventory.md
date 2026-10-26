@@ -36,6 +36,7 @@ Read on 2026-10-21. All are MIT-licensed; notices are in
 | mattpocock | mattpocock/skills | `5beb35b` |
 | pstack | Aqua-123/pstack-for-codex (port of cursor/plugins pstack 0.15.24) | `d5b20bc` |
 | spec-kit | github/spec-kit | reference only |
+| ELI5 | DreambigOu/ELI5 (read 2026-10-26) | `a766623` |
 
 `AGENTS.md` also lists addyosmani/agent-skills and luckys/agent-skills as
 references. Nothing has been ported from them yet; add a row here when a skill
@@ -61,6 +62,8 @@ is compared against them.
 | mattpocock `pr` | Fold | `concise-docs/references/pull-requests.md` | A PR body is documentation; a separate skill would add a listing for one template. Adds limitations and commit-message guidance. |
 | superpowers `verification-before-completion` | Rule | README "Recommended project rule" | One rule, not a workflow: evidence before completion claims. Also built into each skill's report step. |
 | pstack `setup-pstack` | Pattern | [Setup receipts](#setup-receipts) | No setup skill exists here yet. |
+| ELI5 `eli5` | Port | `eli5` | Audience tables merged into one table with three classes (Simple, Technical, Business); grade levels folded into ages, separate tone section folded into the table. Description trimmed to distinct triggers. Adds handling for unlisted audiences, a "keep what you say true" rule, and a completion check. |
+| ELI5 `eli5-workspace/` evals | Drop | — | Eval harness tied to `claude -p` and a fixed install path; not part of the skill. |
 | spec-kit `workflows/bugfix`, `workflows/assess` | Reference | — | Gate shapes already owned by agent-workflows tracks. Nothing to port. |
 
 ## Overlap with existing skills
@@ -72,6 +75,7 @@ is compared against them.
 | `production-software-architecture` | Debugging's "question the architecture after three failed fixes"; ADRs; refactoring across boundaries. | System level only: boundaries, contracts, failure, migration, operability, guardrails. Its Refactor mode loads `refactoring`. Debugging stops and discusses; `domain-docs` owns ADR format. |
 | `concise-docs` | ADR and PR prose. | `concise-docs` owns prose style and PR descriptions; `domain-docs` owns ADR content rules. |
 | `js-ts-project-scaffolding` | None. | — |
+| `eli5` | `concise-docs` also shortens prose. | `concise-docs` edits documents for their usual readers; `eli5` rewrites an explanation for a named audience. |
 
 ## Invocation policy
 
@@ -91,6 +95,7 @@ Model-invoked descriptions stay narrow to keep that cost small.
 | `js-ts-project-scaffolding` | Yes | Users ask for a new project without naming the skill. |
 | `refactoring` | Yes | The agent meets structure that blocks the current change; `start-work-lite` delivery loads it. Its scope rule limits unrequested cleanup to the blocking structure. |
 | `production-software-architecture` | Yes | Boundary, contract, schema and migration changes are the riskiest the agent makes unprompted; `start-work-lite` design loads it. |
+| `eli5` | Yes | Users ask to explain something to a person or age without naming the skill. |
 | `clarify` | No | An interview is the user's choice. `start-work` suggests it rather than loading it. |
 | `code-quality` | No | A full audit is a deliberate, costly request. Self-review covers complexity through `code-review`'s smell baseline. |
 | `start-work-lite` | No | An entry point with outward effects (issue comments, change requests); its own grooming covers clarification. |

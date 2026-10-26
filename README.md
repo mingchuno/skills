@@ -1,8 +1,8 @@
 # Software Engineering Skills
 
-Reusable agent instructions for debugging, test-driven development, code review, clarifying requirements, domain documentation, code quality, refactoring, production architecture, concise documentation, and JS/TS scaffolding. The skills can be installed independently.
+Reusable agent instructions for debugging, test-driven development, code review, clarifying requirements, domain documentation, code quality, refactoring, production architecture, concise documentation, audience-fitted explanations, and JS/TS scaffolding. The skills can be installed independently.
 
-This is the engineering-technique companion to [agent-workflows](https://github.com/mingchuno/agent-workflows), which owns workflow state (tracks, approvals, Work Items, publication). Its `start-work` skill uses these skills when installed and works without them. Several skills adapt MIT-licensed skills from obra/superpowers, mattpocock/skills, and pstack; see [the skill inventory](docs/skill-inventory.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
+This is the engineering-technique companion to [agent-workflows](https://github.com/mingchuno/agent-workflows), which owns workflow state (tracks, approvals, Work Items, publication). Its `start-work` skill uses these skills when installed and works without them. Several skills adapt MIT-licensed skills from obra/superpowers, mattpocock/skills, pstack, and DreambigOu/ELI5; see [the skill inventory](docs/skill-inventory.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ## Choose a skill
 
@@ -17,6 +17,7 @@ This is the engineering-technique companion to [agent-workflows](https://github.
 | [Refactoring](refactoring/SKILL.md) (`refactoring`) | Code's structure needs improving without changing behavior, or is in the way of a change. | Small, reviewable behavior-preserving moves, including legacy-code techniques, with checks after each. |
 | [Production Software Architecture](production-software-architecture/SKILL.md) (`production-software-architecture`) | A change crosses module or service boundaries, alters a public contract or schema, migrates data, or adds infrastructure. | Designs, reviews, or implementation grounded in system constraints, failure modes, compatibility, and trade-offs. |
 | [Concise Technical Documentation](concise-docs/SKILL.md) (`concise-docs`) | A README, ADR, design document, developer guide, change request description, or commit message needs clearer, shorter prose. | Focused documentation that preserves commands, constraints, and technical meaning. |
+| [Explain Like I'm…](eli5/SKILL.md) (`eli5`) | You need a topic, code, error, or document explained to a specific audience: a child, a manager, a parent, an engineer. | An explanation whose vocabulary, analogies, tone, and depth fit that audience, ending on why it matters to them. |
 | [Start Work (lite)](start-work-lite/SKILL.md) (`start-work-lite`) | You want one entry point from an issue or task to a change request, without installing a workflow backend. | Focused grooming, a Track A/B/C route, a work contract published to the issue, then implementation, one self-review round, and a PR or MR. |
 | [JS/TS Project Scaffolding](js-ts-project-scaffolding/SKILL.md) (`js-ts-project-scaffolding`) | You are creating a new JavaScript or TypeScript Node.js or web project. | A minimal, requirements-led stack with preferred tooling and conditional libraries. |
 
